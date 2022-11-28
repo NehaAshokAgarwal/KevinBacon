@@ -9,31 +9,20 @@ import java.util.ArrayList;
 public class DegreesOfSeparationBFS {
 
     // Instance Variables.
-    private SymbolGraph sg; // Symbol graph representation of the file provided.
-    private BreadthFirstPaths bfs; // Shortest path from the source to every other vertex.
-    private ArrayList<String> movies_list; //  ArrayList of movies object (String)
+    private SymbolGraph sg; 
+    private BreadthFirstPaths bfs;
+    private ArrayList<String> movies_list;
 
     // this class cannot be instantiated
     public DegreesOfSeparationBFS(String fname, String delimiter, String source) {
-        // Initialising the Arraylist movies
         movies_list = new ArrayList<String>();
-        // Creating the In object in.
         In in = new In(fname);
-        // Read the file fname until it is empty...
         while(!in.isEmpty()){
-            // Split the line just read into the list of String object.
             String[] list = in.readLine().split(delimiter);
-            //According to the file format, the first element in the list would be the movie name.
             movies_list.add(list[0]);
         }
-        // Initialising the Symbol graph i.e. every integer is mapped to the strings in the fname
-        // provided by splitting the line according the delimiter provided.
         this.sg = new SymbolGraph(fname, delimiter);
-        // Creating graph by calling method graph of the SymbolGraph class.
         Graph G = this.sg.graph();
-        // If the sb contains the source provided, then find the shortest path of all the vertex
-        // in the graph from the source by creating BreathFirstPath object bfs and passing the Graph object and source to it.
-        if(this.sg.contains(source)){
             int s = sg.indexOf(source);
             bfs = new BreadthFirstPaths(G, s);
         }
@@ -46,20 +35,15 @@ public class DegreesOfSeparationBFS {
     // Read actor's name from standard input, print bacon relationship
     public int baconNumber(String sink)
     {
-        // if the sink is not in the graph or the sink is not connected to the source, then return -1.
         if(!this.sg.contains(sink) || !this.bfs.hasPathTo(this.sg.indexOf(sink))){
             return -1;
         }
-        //set the bacon initially to 0.
         int bacon = 0;
-        // In the shortest path from the source to the sink...
         for(int i : bfs.pathTo(this.sg.indexOf(sink))){
-            // If that particular vertex represent a movie name, then incrementing the bacon number by 1.
             if(this.sg.nameOf(i) != null && movies_list.contains(this.sg.nameOf(i))){
                 bacon++;
             }
         }
-        // Print out the bacon number according to the format given.
         System.out.printf("%s has a Bacon number of %d\n", sink, bacon);
         // return bacon number of the sink.
         return bacon;
@@ -68,23 +52,15 @@ public class DegreesOfSeparationBFS {
 
     // Calculate the path itself.
     public Stack<Integer> graphPath(String sink){
-        // Create a stack object and call it path.
         Stack<Integer> path = new Stack<Integer>();
-        // Walk through the shortest pah of the sink in the graph...
         for(int i : bfs.pathTo(this.sg.indexOf(sink))){
-            // push the path into the stack.
             path.push(i);
         }
-        // return the stack.
         return path;
 
     }
 
     public void printPath(Stack<Integer> path){
-       // every other vertex is an actor
-
-        // Computing how many movie names comes in the shortest path of the sink from the source.
-        // By iterating through the shortest path and incrementing size variable on every encounter to the movie name.
         int size = 0;
        for(int i : path){
            if(movies_list.contains(sg.nameOf(i))){
@@ -93,16 +69,10 @@ public class DegreesOfSeparationBFS {
        }
        // Until the value of the size computed above...
         for(int i = 0; i < size; i++){
-            // pop the stack and store the value to  variable actor cause the
-            // first value is the actor name and so on...
             String actor = sg.nameOf(path.pop());
-            //pop the stack and store the value to the variable movie because
-            // the second value is the movie name and so on...
             String movie = sg.nameOf(path.pop());
-            //Print out the path according the format provided.
             System.out.printf("%s was in \"%s\" with %s\n",actor, movie, sg.nameOf(path.peek()));
         }
-        // printing a next line character at the end.
         System.out.println();
 
 

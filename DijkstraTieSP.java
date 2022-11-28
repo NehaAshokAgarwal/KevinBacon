@@ -14,15 +14,15 @@ public class DijkstraTieSP {
      *
      * @param G the edge-weighted digraph
      * @param s the source vertex
-     * @throws IllegalArgumentException if an edge weight is negative
-     * @throws IllegalArgumentException unless {@code 0 <= s < V}
-     */
     public DijkstraTieSP(EdgeWeightedDigraph G, int s) {
         for (DirectedEdge e : G.edges()) {
             if (e.weight() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
 
+     * @throws IllegalArgumentException if an edge weight is negative
+     * @throws IllegalArgumentException unless {@code 0 <= s < V}
+     */
         distTo = new double[G.V()];
         edgeTo = new DirectedEdge[G.V()];
 
@@ -47,10 +47,7 @@ public class DijkstraTieSP {
 
     // relax edge e and update pq if changed
     private void relax(DirectedEdge e) {
-        // v is the vertex from which the edge is pointing to.
-        // w is the vertex on teh which the edge is ending.
         int v = e.from(), w = e.to();
-         // Original Dijkstra Relaxation algorithm.
         if (distTo[w] > distTo[v] + e.weight()) {
 
             distTo[w] = distTo[v] + e.weight();
@@ -58,22 +55,15 @@ public class DijkstraTieSP {
             if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
             else pq.insert(w, distTo[w]);
         }
-        // if the weight of the shortest distance to vertex w is equal to the
-        // weight of the distance of the new path ( distance of vertex v + edge weight)
         if (distTo[w] == distTo[v] + e.weight()) {
-            // set a to 1 and b to 0 which keeps track of the number of edges to the respective paths to vertex v and w.
-            // set a to 1 because we add the weight of the edge in the path later on.
             int a = 1;
             int b = 0;
-            // Iterating to the path to the vertex v to update a to the number of edges in path from source to vertex v.
             for (DirectedEdge i : pathTo(v)) {
                 a++;
             }
-            // Iterating to the path to the vertex v to update a to the number of edges in path from source to vertex w.
             for (DirectedEdge i : pathTo(w)) {
                b++;
             }
-            //if the number of edges in path a is less than teh number of edges in path b, then relax the edge otherwise do not.
             if (a < b) {
                 distTo[w] = distTo[v] + e.weight();
                 edgeTo[w] = e;
